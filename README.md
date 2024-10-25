@@ -6,3 +6,5 @@ waybackurls 'URL TARGET'| grep '='| httpx --silent --status-code| awk '{print $1
 
 #### Screenshot
 cat hosts | gowitness scan file -f - --write-csv  
+
+
