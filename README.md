@@ -46,7 +46,6 @@ cat output3.txt | grep -E "S3 Buckets: \['[^]]+"
 cat output.txt | grep -oP 'https?://[a-zA-Z0-9.-]*s3(\.dualstack)?\.ap-[a-z0-9-]+\.amazonaws\.com/[^\s"<>]+' | sort -u
 cat output3.txt | grep -oP '([a-zA-Z0-9.-]+\.s3(\.dualstack)?\.[a-z0-9-]+\.amazonaws\.com)' | sort -u
 
-***
 
 #### Brute-Forcing S3 Bucket with LazyS3
 You can also use this LazyS3 tool — it's basically a brute force tool for AWS S3 buckets using different permutations. you can run the following command by specifying the target domain
@@ -117,4 +116,4 @@ Keeps request speed low enough to evade rate-based WAF triggers.
 Emulates real browser TLS behavior to bypass basic fingerprinting-based defenses.
 
 credits to blackhat ethical Hacking
----
+
