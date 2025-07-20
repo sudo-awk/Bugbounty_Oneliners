@@ -117,3 +117,11 @@ Emulates real browser TLS behavior to bypass basic fingerprinting-based defenses
 
 credits to blackhat ethical Hacking
 
+# Look for interesting files using wayback machine
+```curl -G "https://web.archive.org/cdx/search/cdx" — data-urlencode "url=*.example.com/*" — data-urlencode "collapse=urlkey" — data-urlencode "output=text" — data-urlencode "fl=original" > output.txt```
+
+look for interesting file types
+```cat out.txt | uro | grep -E '\.xls|\.xml|\.xlsx|\.json|\.pdf|\.sql|\.doc|\.docx|\.pptx|\.txt|\.zip|\.tar\.gz|\.tgz|\.bak|\.7z|\.rar|\.log|\.cache|\.secret|\.db|\.backup|\.yml|\.gz|\.config|\.csv|\.yaml|\.md|\.md5|\.exe|\.dll|\.bin|\.ini|\.bat|\.sh|\.tar|\.deb|\.git|\.env|\.rpm|\.iso|\.img|\.apk|\.msi|\.dmg|\.tmp|\.crt|\.pem|\.key|\.pub|\.asc'```
+
+look for sensitive keyword inside pdf files
+```cat output.txt | grep -Ea '\.pdf' | while read -r url; do curl -s "$url" | pdftotext - - | grep -Eaiq '(internal use only|confidential|strictly private|personal & confidential|private|restricted|internal|not for distribution|do not share|proprietary|trade secret|classified|sensitive|bank statement|invoice|salary|contract|agreement|non disclosure|passport|social security|ssn|date of birth|credit card|identity|id number|company confidential|staff only|management only|internal only)' && echo "$url"; done```
